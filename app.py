@@ -1,0 +1,203 @@
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from config import Config
+
+app = Flask(__name__, template_folder='static/templates', static_folder='static', static_url_path='/static')
+app.config.from_object(Config)
+
+app.secret_key = 'super-secret-key-for-diploma-project'
+
+db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+class Student(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(200))
+    group_name = db.Column(db.String(50))
+    speciality = db.Column(db.String(100))
+    role = db.Column(db.String(20), default='student')
+
+class Club(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    club_name = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    teacher = db.Column(db.String(100))
+    schedule = db.Column(db.String(100))
+    max_members = db.Column(db.Integer)
+
+class Registration(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    club_id = db.Column(db.Integer, db.ForeignKey('club.id'))
+
+    registration_date = db.Column(db.String(100))
+    status = db.Column(db.String(50))
+
+    student = db.relationship('Student', backref='registrations')
+    club = db.relationship('Club', backref='registrations')
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Student.query.get(int(user_id))
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/clubs')
+def clubs():
+    all_clubs = Club.query.all()
+    return render_template('clubs.html', clubs=all_clubs)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        full_name = request.form['full_name']
+        email = request.form['email']
+        password = generate_password_hash(request.form['password'])
+        group_name = request.form['group_name']
+        speciality = request.form['speciality']
+
+        new_student = Student(
+            full_name=full_name,
+            email=email,
+            password=password,
+            group_name=group_name,
+            speciality=speciality,
+            role='student'
+        )
+
+        db.session.add(new_student)
+        db.session.commit()
+
+        flash('Registration completed successfully!')
+        return redirect('/')
+
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        student = Student.query.filter_by(email=email).first()
+
+        if student and check_password_hash(student.password, password):
+            login_user(student)
+            flash('Successfully logged in!')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid email or password.')
+
+    return render_template('login.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/admin', methods=['GET', 'POST'])
+@login_required
+def admin():
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    if request.method == 'POST':
+        club_name = request.form['club_name']
+        description = request.form['description']
+        teacher = request.form['teacher']
+        schedule = request.form['schedule']
+        max_members = int(request.form['max_members'])
+
+        new_club = Club(
+            club_name=club_name,
+            description=description,
+            teacher=teacher,
+            schedule=schedule,
+            max_members=max_members
+        )
+
+        db.session.add(new_club)
+        db.session.commit()
+
+        return redirect(url_for('clubs'))
+
+    return render_template('admin.html')
+
+@app.route('/register_club/<int:club_id>')
+@login_required
+def register_club(club_id):
+    club = Club.query.get_or_404(club_id)
+
+    registrations_count = Registration.query.filter_by(
+        club_id=club.id
+    ).count()
+
+    if registrations_count >= club.max_members:
+        return "No available places."
+
+    existing_registration = Registration.query.filter_by(
+        student_id=current_user.id,
+        club_id=club.id
+    ).first()
+
+    if existing_registration:
+        return "You are already registered."
+
+    registration = Registration(
+        student_id=current_user.id,
+        club_id=club.id,
+        registration_date='2026',
+        status='Pending'
+    )
+
+    db.session.add(registration)
+    db.session.commit()
+
+    return redirect('/my_clubs')
+
+@app.route('/my_clubs')
+@login_required
+def my_clubs():
+    user_registrations = Registration.query.filter_by(
+        student_id=current_user.id
+    ).all()
+
+    return render_template('my_clubs.html', registrations=user_registrations)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+
+        admin_exists = Student.query.filter_by(email='admin@gmail.com').first()
+
+        if not admin_exists:
+            admin = Student(
+                full_name='Administrator',
+                email='admin@gmail.com',
+                password=generate_password_hash('admin123'),
+                group_name='Administration',
+                speciality='System Management',
+                role='admin'
+            )
+            db.session.add(admin)
+            db.session.commit()
+
+    app.run(debug=True, host='0.0.0.0', port=5000)

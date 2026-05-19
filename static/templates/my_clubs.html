@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>My Clubs</title>
+</head>
+<body>
+
+<h1>My Clubs</h1>
+
+{% for registration in registrations %}
+
+<div style="border:1px solid black; padding:10px; margin:10px;">
+
+    <h2>{{ registration.club.club_name }}</h2>
+
+    <p>Status: {{ registration.status }}</p>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

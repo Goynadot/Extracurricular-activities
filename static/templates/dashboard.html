@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <h1>
+            Welcome, {{ current_user.full_name }}
+        </h1>
+        
+        <hr>
+
+        <p>
+            <strong>Email:</strong> {{ current_user.email }}
+        </p>
+
+        <p>
+            <strong>Group:</strong> {{ current_user.group_name }}
+        </p>
+
+        <p>
+            <strong>Speciality:</strong> {{ current_user.speciality }}
+        </p>
+
+        <p>
+            <strong>Role:</strong> {{ current_user.role }}
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

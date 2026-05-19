@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Clubs
+{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">
+    Student Clubs
+</h1>
+
+<div class="row">
+
+{% for club in clubs %}
+
+<div class="col-md-6 mb-4">
+
+    <div class="card shadow h-100">
+        <div class="card-body">
+
+            <h3 class="card-title">
+                {{ club.club_name }}
+            </h3>
+
+            <p class="card-text">
+                {{ club.description }}
+            </p>
+
+            <hr>
+
+            <p>
+                <strong>Teacher:</strong>
+                {{ club.teacher }}
+            </p>
+
+            <p>
+                <strong>Schedule:</strong>
+                {{ club.schedule }}
+            </p>
+
+            <p>
+                <strong>Available places:</strong>
+                {{ club.max_members }}
+            </p>
+
+            {% if current_user.is_authenticated %}
+                
+                <a href="/register_club/{{ club.id }}" class="btn btn-primary">
+                    Join Club
+                </a>
+
+            {% else %}
+                
+                <a href="/login" class="btn btn-dark">
+                    Login to Join
+                </a>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
