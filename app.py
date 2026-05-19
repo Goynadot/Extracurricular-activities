@@ -41,7 +41,11 @@ TRANSLATIONS = {
         'btn_login_submit': 'Увійти',
         'flash_reg_success': 'Реєстрація успішно завершена!',
         'flash_login_success': 'Вхід виконано успішно!',
-        'flash_login_error': 'Невірний email або пароль.'
+        'flash_login_error': 'Невірний email або пароль.',
+        'dash_welcome': 'Вітаємо',
+        'dash_group': 'Група',
+        'dash_speciality': 'Спеціальність',
+        'dash_role': 'Роль'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -68,7 +72,11 @@ TRANSLATIONS = {
         'btn_login_submit': 'Login',
         'flash_reg_success': 'Registration completed successfully!',
         'flash_login_success': 'Successfully logged in!',
-        'flash_login_error': 'Invalid email or password.'
+        'flash_login_error': 'Invalid email or password.',
+        'dash_welcome': 'Welcome',
+        'dash_group': 'Group',
+        'dash_speciality': 'Speciality',
+        'dash_role': 'Role'
     }
 }
 
