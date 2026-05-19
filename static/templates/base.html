@@ -13,8 +13,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">
-            {{ text['brand'] }}
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{{ url_for('static', filename='emblem.png') }}" alt="Logo" height="40" class="d-inline-block align-top me-2">
+            <span>{{ text['brand'] }}</span>
         </a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
