@@ -30,7 +30,6 @@ TRANSLATIONS = {
         'main_subtitle': 'Онлайн-система реєстрації в гуртки та позанавчальні секції.',
         'btn_explore': 'Оглянути гуртки',
         'welcome_msg': 'Ласкаво просимо до нашої системи. Авторизуйтесь, щоб записатися на улюблені заняття.',
-        # Реєстрація
         'reg_header': 'Реєстрація Студента',
         'label_name': 'Повне ім\'я',
         'label_email': 'Електронна пошта',
@@ -38,6 +37,8 @@ TRANSLATIONS = {
         'label_group': 'Група',
         'label_speciality': 'Спеціальність',
         'btn_reg_submit': 'Зареєструватися',
+        'login_header': 'Авторизація Студента',
+        'btn_login_submit': 'Увійти',
         'flash_reg_success': 'Реєстрація успішно завершена!',
         'flash_login_success': 'Вхід виконано успішно!',
         'flash_login_error': 'Невірний email або пароль.'
@@ -56,7 +57,6 @@ TRANSLATIONS = {
         'main_subtitle': 'Online registration system for clubs and extracurricular activities.',
         'btn_explore': 'Explore Clubs',
         'welcome_msg': 'Welcome to our system. Please log in to register for your favorite activities.',
-        # Registration
         'reg_header': 'Student Registration',
         'label_name': 'Full Name',
         'label_email': 'Email',
@@ -64,6 +64,8 @@ TRANSLATIONS = {
         'label_group': 'Group',
         'label_speciality': 'Speciality',
         'btn_reg_submit': 'Register',
+        'login_header': 'Student Login',
+        'btn_login_submit': 'Login',
         'flash_reg_success': 'Registration completed successfully!',
         'flash_login_success': 'Successfully logged in!',
         'flash_login_error': 'Invalid email or password.'
