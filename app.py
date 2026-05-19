@@ -30,6 +30,14 @@ TRANSLATIONS = {
         'main_subtitle': 'Онлайн-система реєстрації в гуртки та позанавчальні секції.',
         'btn_explore': 'Оглянути гуртки',
         'welcome_msg': 'Ласкаво просимо до нашої системи. Авторизуйтесь, щоб записатися на улюблені заняття.',
+        # Реєстрація
+        'reg_header': 'Реєстрація Студента',
+        'label_name': 'Повне ім\'я',
+        'label_email': 'Електронна пошта',
+        'label_password': 'Пароль',
+        'label_group': 'Група',
+        'label_speciality': 'Спеціальність',
+        'btn_reg_submit': 'Зареєструватися',
         'flash_reg_success': 'Реєстрація успішно завершена!',
         'flash_login_success': 'Вхід виконано успішно!',
         'flash_login_error': 'Невірний email або пароль.'
@@ -48,6 +56,14 @@ TRANSLATIONS = {
         'main_subtitle': 'Online registration system for clubs and extracurricular activities.',
         'btn_explore': 'Explore Clubs',
         'welcome_msg': 'Welcome to our system. Please log in to register for your favorite activities.',
+        # Registration
+        'reg_header': 'Student Registration',
+        'label_name': 'Full Name',
+        'label_email': 'Email',
+        'label_password': 'Password',
+        'label_group': 'Group',
+        'label_speciality': 'Speciality',
+        'btn_reg_submit': 'Register',
         'flash_reg_success': 'Registration completed successfully!',
         'flash_login_success': 'Successfully logged in!',
         'flash_login_error': 'Invalid email or password.'
@@ -56,7 +72,6 @@ TRANSLATIONS = {
 
 @app.context_processor
 def inject_lang():
-    # Якщо мова не встановлена в сесії, виставляємо 'uk' за замовчуванням
     lang = session.get('lang', 'uk')
     return dict(lang=lang, text=TRANSLATIONS[lang])
 
@@ -64,7 +79,6 @@ def inject_lang():
 def set_language(lang):
     if lang in ['uk', 'en']:
         session['lang'] = lang
-    # Повертаємо користувача на ту сторінку, з якої він прийшов
     return redirect(request.referrer or url_for('home'))
 
 class Student(db.Model, UserMixin):
