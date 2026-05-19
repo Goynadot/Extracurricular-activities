@@ -5,52 +5,54 @@
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center" style="min-height: 75vh; margin-top: 20px;">
-    <div class="col-md-6 col-lg-5 mb-5">
-        
-        <div class="card shadow" style="border-radius: 15px; background-color: #ffffff !important; border: none;">
-            <div class="card-body p-4 p-sm-5">
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+        <div class="col-md-6 col-lg-5 mb-5 mt-4">
+            
+            <div class="card shadow border-0" style="border-radius: 15px; background-color: #ffffff;">
+                <div class="card-body p-4 p-sm-5">
 
-                <h2 class="text-center mb-4 fw-bold text-dark" style="color: #212529 !important;">
-                    {{ text['reg_header'] }}
-                </h2>
+                    <h2 class="text-center mb-4 fw-bold text-dark">
+                        {{ text['reg_header'] }}
+                    </h2>
 
-                <form method="POST">
+                    <form method="POST">
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">{{ text['label_name'] }}</label>
-                        <input type="text" name="full_name" class="form-control text-dark" style="background-color: #ffffff !important; border: 1px solid #ced4da !important; color: #212529 !important;" required>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">{{ text['label_name'] }}</label>
+                            <input type="text" name="full_name" class="form-control text-dark border" style="border-radius: 8px;" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">{{ text['label_email'] }}</label>
-                        <input type="email" name="email" class="form-control text-dark" style="background-color: #ffffff !important; border: 1px solid #ced4da !important; color: #212529 !important;" required>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">{{ text['label_email'] }}</label>
+                            <input type="email" name="email" class="form-control text-dark border" style="border-radius: 8px;" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">{{ text['label_password'] }}</label>
-                        <input type="password" name="password" class="form-control text-dark" style="background-color: #ffffff !important; border: 1px solid #ced4da !important; color: #212529 !important;" required>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">{{ text['label_password'] }}</label>
+                            <input type="password" name="password" class="form-control text-dark border" style="border-radius: 8px;" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">{{ text['label_group'] }}</label>
-                        <input type="text" name="group_name" class="form-control text-dark" style="background-color: #ffffff !important; border: 1px solid #ced4da !important; color: #212529 !important;" required>
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary fw-semibold">{{ text['label_group'] }}</label>
+                            <input type="text" name="group_name" class="form-control text-dark border" style="border-radius: 8px;" required>
+                        </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary">{{ text['label_speciality'] }}</label>
-                        <input type="text" name="speciality" class="form-control text-dark" style="background-color: #ffffff !important; border: 1px solid #ced4da !important; color: #212529 !important;" required>
-                    </div>
+                        <div class="mb-4">
+                            <label class="form-label text-secondary fw-semibold">{{ text['label_speciality'] }}</label>
+                            <input type="text" name="speciality" class="form-control text-dark border" style="border-radius: 8px;" required>
+                        </div>
 
-                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm" style="border-radius: 8px;">
-                        {{ text['btn_reg_submit'] }}
-                    </button>
+                        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm" style="border-radius: 8px;">
+                            {{ text['btn_reg_submit'] }}
+                        </button>
 
-                </form>
+                    </form>
 
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 {% endblock %}
