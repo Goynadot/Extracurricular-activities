@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,6 +15,57 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+TRANSLATIONS = {
+    'uk': {
+        'brand': 'Система Студентської Активності',
+        'home': 'Головна',
+        'clubs': 'Гуртки',
+        'my_clubs': 'Мої Гуртки',
+        'admin_panel': 'Панель Адміна',
+        'dashboard': 'Кабінет',
+        'logout': 'Вихід',
+        'login': 'Вхід',
+        'register': 'Реєстрація',
+        'main_title': 'Платформа Студентської Активності',
+        'main_subtitle': 'Онлайн-система реєстрації в гуртки та позанавчальні секції.',
+        'btn_explore': 'Оглянути гуртки',
+        'welcome_msg': 'Ласкаво просимо до нашої системи. Авторизуйтесь, щоб записатися на улюблені заняття.',
+        'flash_reg_success': 'Реєстрація успішно завершена!',
+        'flash_login_success': 'Вхід виконано успішно!',
+        'flash_login_error': 'Невірний email або пароль.'
+    },
+    'en': {
+        'brand': 'Student Activities System',
+        'home': 'Home',
+        'clubs': 'Clubs',
+        'my_clubs': 'My Clubs',
+        'admin_panel': 'Admin Panel',
+        'dashboard': 'Dashboard',
+        'logout': 'Logout',
+        'login': 'Login',
+        'register': 'Register',
+        'main_title': 'Student Activities Platform',
+        'main_subtitle': 'Online registration system for clubs and extracurricular activities.',
+        'btn_explore': 'Explore Clubs',
+        'welcome_msg': 'Welcome to our system. Please log in to register for your favorite activities.',
+        'flash_reg_success': 'Registration completed successfully!',
+        'flash_login_success': 'Successfully logged in!',
+        'flash_login_error': 'Invalid email or password.'
+    }
+}
+
+@app.context_processor
+def inject_lang():
+    # Якщо мова не встановлена в сесії, виставляємо 'uk' за замовчуванням
+    lang = session.get('lang', 'uk')
+    return dict(lang=lang, text=TRANSLATIONS[lang])
+
+@app.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in ['uk', 'en']:
+        session['lang'] = lang
+    # Повертаємо користувача на ту сторінку, з якої він прийшов
+    return redirect(request.referrer or url_for('home'))
 
 class Student(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,20 +86,16 @@ class Club(db.Model):
 
 class Registration(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     club_id = db.Column(db.Integer, db.ForeignKey('club.id'))
-
     registration_date = db.Column(db.String(100))
     status = db.Column(db.String(50))
-
     student = db.relationship('Student', backref='registrations')
     club = db.relationship('Club', backref='registrations')
 
 @login_manager.user_loader
 def load_user(user_id):
     return Student.query.get(int(user_id))
-
 
 @app.route('/')
 def home():
@@ -61,6 +108,7 @@ def clubs():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    current_lang = session.get('lang', 'uk')
     if request.method == 'POST':
         full_name = request.form['full_name']
         email = request.form['email']
@@ -80,13 +128,14 @@ def register():
         db.session.add(new_student)
         db.session.commit()
 
-        flash('Registration completed successfully!')
+        flash(TRANSLATIONS[current_lang]['flash_reg_success'])
         return redirect('/')
 
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    current_lang = session.get('lang', 'uk')
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -95,10 +144,10 @@ def login():
 
         if student and check_password_hash(student.password, password):
             login_user(student)
-            flash('Successfully logged in!')
+            flash(TRANSLATIONS[current_lang]['flash_login_success'])
             return redirect(url_for('dashboard'))
         else:
-            flash('Invalid email or password.')
+            flash(TRANSLATIONS[current_lang]['flash_login_error'])
 
     return render_template('login.html')
 
@@ -140,9 +189,7 @@ def admin():
 def register_club(club_id):
     club = Club.query.get_or_404(club_id)
 
-    registrations_count = Registration.query.filter_by(
-        club_id=club.id
-    ).count()
+    registrations_count = Registration.query.filter_by(club_id=club.id).count()
 
     if registrations_count >= club.max_members:
         return "No available places."
@@ -170,10 +217,7 @@ def register_club(club_id):
 @app.route('/my_clubs')
 @login_required
 def my_clubs():
-    user_registrations = Registration.query.filter_by(
-        student_id=current_user.id
-    ).all()
-
+    user_registrations = Registration.query.filter_by(student_id=current_user.id).all()
     return render_template('my_clubs.html', registrations=user_registrations)
 
 @app.route('/logout')
