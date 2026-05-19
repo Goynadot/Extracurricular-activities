@@ -1,37 +1,41 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Dashboard
+{{ text['dashboard'] }} — {{ text['brand'] }}
 {% endblock %}
 
 {% block content %}
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-10 col-md-11">
 
-<div class="card shadow">
-    <div class="card-body">
+        <div class="card shadow border-0" style="border-radius: 15px; background-color: #ffffff;">
+            <div class="card-body p-4 p-sm-5">
 
-        <h1>
-            Welcome, {{ current_user.full_name }}
-        </h1>
-        
-        <hr>
+                <h1 class="display-5 fw-bold text-dark mb-4">
+                    {{ text['dash_welcome'] }}, {{ current_user.full_name }}
+                </h1>
+                
+                <hr class="border-secondary opacity-25 mb-4">
 
-        <p>
-            <strong>Email:</strong> {{ current_user.email }}
-        </p>
+                <p class="fs-5 text-dark mb-3">
+                    <strong class="text-secondary">{{ text['label_email'] }}:</strong> {{ current_user.email }}
+                </p>
 
-        <p>
-            <strong>Group:</strong> {{ current_user.group_name }}
-        </p>
+                <p class="fs-5 text-dark mb-3">
+                    <strong class="text-secondary">{{ text['dash_group'] }}:</strong> {{ current_user.group_name }}
+                </p>
 
-        <p>
-            <strong>Speciality:</strong> {{ current_user.speciality }}
-        </p>
+                <p class="fs-5 text-dark mb-3">
+                    <strong class="text-secondary">{{ text['dash_speciality'] }}:</strong> {{ current_user.speciality }}
+                </p>
 
-        <p>
-            <strong>Role:</strong> {{ current_user.role }}
-        </p>
+                <p class="fs-5 text-dark mb-0">
+                    <strong class="text-secondary">{{ text['dash_role'] }}:</strong> {{ current_user.role }}
+                </p>
+
+            </div>
+        </div>
 
     </div>
 </div>
-
 {% endblock %}
