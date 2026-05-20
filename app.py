@@ -65,7 +65,9 @@ TRANSLATIONS = {
         'btn_edit': 'Редагувати',
         'admin_edit_header': 'Редагування гуртка',
         'btn_save_changes': 'Зберегти зміни',
-        'btn_back': 'Назад'
+        'btn_back': 'Назад',
+        'btn_delete': 'Видалити',
+        'confirm_delete': 'Ви впевнені, що хочете видалити цей гурток? Усі записи студентів до нього також будуть видалені.'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -116,7 +118,9 @@ TRANSLATIONS = {
         'btn_edit': 'Edit',
         'admin_edit_header': 'Edit Club',
         'btn_save_changes': 'Save Changes',
-        'btn_back': 'Back'
+        'btn_back': 'Back',
+        'btn_delete': 'Delete',
+        'confirm_delete': 'Are you sure you want to delete this club? All student registrations for it will also be deleted.'
     }
 }
 
@@ -309,6 +313,24 @@ def register_club(club_id):
     db.session.commit()
 
     return redirect('/my_clubs')
+
+@app.route('/admin/delete/<int:club_id>', methods=['POST'])
+@login_required
+def delete_club(club_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    club = Club.query.get_or_404(club_id)
+
+    Registration.query.filter_by(club_id=club.id).delete()
+
+    if club.translation:
+        db.session.delete(club.translation)
+
+    db.session.delete(club)
+    db.session.commit()
+
+    return redirect(url_for('admin'))
 
 @app.route('/my_clubs')
 @login_required
