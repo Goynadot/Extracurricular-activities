@@ -107,8 +107,6 @@ def set_language(lang):
         session['lang'] = lang
     return redirect(request.referrer or url_for('home'))
 
-translation = db.relationship('ClubTranslation', backref='base_club', uselist=False)
-
 class ClubTranslation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     club_id = db.Column(db.Integer, db.ForeignKey('club.id'), unique=True)
@@ -133,6 +131,8 @@ class Club(db.Model):
     teacher = db.Column(db.String(100))
     schedule = db.Column(db.String(100))
     max_members = db.Column(db.Integer)
+
+    translation = db.relationship('ClubTranslation', backref='base_club', uselist=False)
 
 class Registration(db.Model):
     id = db.Column(db.Integer, primary_key=True)
