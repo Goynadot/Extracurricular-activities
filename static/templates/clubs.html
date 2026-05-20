@@ -19,23 +19,39 @@
         <div class="card-body p-4">
 
             <h3 class="card-title fw-bold text-dark">
-                {{ club.club_name }}
+                {% if lang == 'en' and club.translation and club.translation.club_name_en %}
+                    {{ club.translation.club_name_en }}
+                {% else %}
+                    {{ club.club_name }}
+                {% endif %}
             </h3>
 
             <p class="card-text text-muted mt-2">
-                {{ club.description }}
+                {% if lang == 'en' and club.translation and club.translation.description_en %}
+                    {{ club.translation.description_en }}
+                {% else %}
+                    {{ club.description }}
+                {% endif %}
             </p>
 
             <hr class="opacity-25 my-3">
 
             <p class="mb-2 text-dark">
                 <strong>{{ text['club_teacher'] }}:</strong>
-                {{ club.teacher }}
+                {% if lang == 'en' and club.translation and club.translation.teacher_en %}
+                    {{ club.translation.teacher_en }}
+                {% else %}
+                    {{ club.teacher }}
+                {% endif %}
             </p>
 
             <p class="mb-2 text-dark">
                 <strong>{{ text['club_schedule'] }}:</strong>
-                {{ club.schedule }}
+                {% if lang == 'en' and club.translation and club.translation.schedule_en %}
+                    {{ club.translation.schedule_en }}
+                {% else %}
+                    {{ club.schedule }}
+                {% endif %}
             </p>
 
             <p class="mb-4 text-dark">
@@ -44,17 +60,13 @@
             </p>
 
             {% if current_user.is_authenticated %}
-                
                 <a href="/register_club/{{ club.id }}" class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px;">
                     {{ text['btn_join'] }}
                 </a>
-
             {% else %}
-                
                 <a href="/login" class="btn btn-dark btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px; background-color: #212529;">
                     {{ text['btn_login_to_join'] }}
                 </a>
-
             {% endif %}
 
         </div>
