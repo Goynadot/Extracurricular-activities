@@ -259,6 +259,10 @@ def edit_club(club_id):
 
     club = Club.query.get_or_404(club_id)
 
+    if not club.translation:
+        club.translation = ClubTranslation(club_id=club.id)
+        db.session.add(club.translation)
+
     if request.method == 'POST':
         club.club_name = request.form['club_name']
         club.description = request.form['description']
