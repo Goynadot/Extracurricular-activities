@@ -69,6 +69,12 @@ footer {
     box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
 }
 
+.form-control:focus {
+    border-color: #4facfe !important;
+    box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25) !important;
+    transition: all 0.3s ease;
+}
+
 .item-1:hover { border-left-color: #ff4757 !important; color: #ff4757; transform: translateX(5px); }
 .item-2:hover { border-left-color: #2ed573 !important; color: #2ed573; transform: translateX(5px); }
 .item-3:hover { border-left-color: #1e90ff !important; color: #1e90ff; transform: translateX(5px); }
