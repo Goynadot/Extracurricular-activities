@@ -107,6 +107,16 @@ def set_language(lang):
         session['lang'] = lang
     return redirect(request.referrer or url_for('home'))
 
+translation = db.relationship('ClubTranslation', backref='base_club', uselist=False)
+
+class ClubTranslation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    club_id = db.Column(db.Integer, db.ForeignKey('club.id'), unique=True)
+    club_name_en = db.Column(db.String(100))
+    description_en = db.Column(db.Text)
+    teacher_en = db.Column(db.String(100))
+    schedule_en = db.Column(db.String(100))
+
 class Student(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100))
