@@ -53,7 +53,14 @@ TRANSLATIONS = {
         'club_schedule': 'Розклад занять',
         'club_places': 'Вільних місць',
         'btn_join': 'Записатись у гурток',
-        'btn_login_to_join': 'Увійдіть, щоб записатись'
+        'btn_login_to_join': 'Увійдіть, щоб записатись',
+        'admin_header': 'Створити новий гурток',
+        'label_club_name': 'Назва гуртка',
+        'label_description': 'Опис',
+        'label_teacher': 'Викладач / Тренер',
+        'label_schedule': 'Розклад',
+        'label_max_members': 'Макс. кількість місць',
+        'btn_create_club': 'Створити гурток'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -92,7 +99,14 @@ TRANSLATIONS = {
         'club_schedule': 'Schedule',
         'club_places': 'Available places',
         'btn_join': 'Join Club',
-        'btn_login_to_join': 'Login to Join'
+        'btn_login_to_join': 'Login to Join',
+        'admin_header': 'Create New Club',
+        'label_club_name': 'Club Name',
+        'label_description': 'Description',
+        'label_teacher': 'Teacher / Coach',
+        'label_schedule': 'Schedule',
+        'label_max_members': 'Max Members',
+        'btn_create_club': 'Create Club'
     }
 }
 
