@@ -45,7 +45,15 @@ TRANSLATIONS = {
         'dash_welcome': 'Вітаємо',
         'dash_group': 'Група',
         'dash_speciality': 'Спеціальність',
-        'dash_role': 'Роль'
+        'dash_role': 'Роль',
+        'dash_my_clubs_title': 'Мої активні гуртки та секції',
+        'dash_no_clubs': 'Ви ще не записані до жодного гуртка.',
+        'clubs_title': 'Студентські гуртки та секції',
+        'club_teacher': 'Викладач / Тренер',
+        'club_schedule': 'Розклад занять',
+        'club_places': 'Вільних місць',
+        'btn_join': 'Записатись у гурток',
+        'btn_login_to_join': 'Увійдіть, щоб записатись'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -76,7 +84,15 @@ TRANSLATIONS = {
         'dash_welcome': 'Welcome',
         'dash_group': 'Group',
         'dash_speciality': 'Speciality',
-        'dash_role': 'Role'
+        'dash_role': 'Role',
+        'dash_my_clubs_title': 'My Active Clubs & Sections',
+        'dash_no_clubs': 'You are not registered in any clubs yet.',
+        'clubs_title': 'Student Clubs & Sections',
+        'club_teacher': 'Teacher / Coach',
+        'club_schedule': 'Schedule',
+        'club_places': 'Available places',
+        'btn_join': 'Join Club',
+        'btn_login_to_join': 'Login to Join'
     }
 }
 
