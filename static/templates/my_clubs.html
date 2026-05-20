@@ -1,24 +1,61 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="utf-8">
-    <title>My Clubs</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>My Clubs</h1>
+{% block title %}
+{{ text['my_clubs'] }} — {{ text['brand'] }}
+{% endblock %}
 
-{% for registration in registrations %}
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <h2 class="text-center mb-4 fw-bold text-white">
+        {{ text['dash_my_clubs_title'] }}
+    </h2>
 
-<div style="border:1px solid black; padding:10px; margin:10px;">
+    <div class="row justify-content-center">
+        
+        {% if registrations %}
+            {% for registration in registrations %}
+                <div class="col-md-8 mb-3">
+                    <div class="card shadow-sm border-0" style="border-radius: 12px; background-color: #ffffff;">
+                        <div class="card-body d-flex justify-content-between align-items-center p-4">
+                            
+                            <div>
+                                <h4 class="fw-bold mb-1 text-dark">
+                                    {% if lang == 'en' and registration.club.club_name_en %}
+                                        {{ registration.club.club_name_en }}
+                                    {% else %}
+                                        {{ registration.club.club_name }}
+                                    {% endif %}
+                                </h4>
+                                <small class="text-muted">
+                                    ID: {{ registration.id }} | 📅 {{ registration.registration_date }}
+                                </small>
+                            </div>
+                            
+                            <div>
+                                <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-2 shadow-sm">
+                                    {{ registration.status }}
+                                </span>
+                            </div>
 
-    <h2>{{ registration.club.club_name }}</h2>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+        {% else %}
+            <div class="col-md-8 text-center mt-3">
+                <div class="card shadow-sm border-0" style="border-radius: 15px; background-color: rgba(255, 255, 255, 0.95);">
+                    <div class="card-body p-5">
+                        <h4 class="text-muted fw-bold mb-3">{{ text['dash_no_clubs'] }}</h4>
+                        <a href="/clubs" class="btn btn-primary btn-lg shadow-sm" style="border-radius: 8px;">
+                            {{ text['btn_explore'] }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
 
-    <p>Status: {{ registration.status }}</p>
-
+    </div>
 </div>
-
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}
