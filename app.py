@@ -64,7 +64,8 @@ TRANSLATIONS = {
         'admin_existing_clubs': 'Існуючі гуртки',
         'btn_edit': 'Редагувати',
         'admin_edit_header': 'Редагування гуртка',
-        'btn_save_changes': 'Зберегти зміни'
+        'btn_save_changes': 'Зберегти зміни',
+        'btn_back': 'Назад'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -114,7 +115,8 @@ TRANSLATIONS = {
         'admin_existing_clubs': 'Existing Clubs',
         'btn_edit': 'Edit',
         'admin_edit_header': 'Edit Club',
-        'btn_save_changes': 'Save Changes'
+        'btn_save_changes': 'Save Changes',
+        'btn_back': 'Back'
     }
 }
 
