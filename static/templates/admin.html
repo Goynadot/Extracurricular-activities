@@ -1,50 +1,49 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Admin Panel
+{{ text['admin_panel'] }} — {{ text['brand'] }}
 {% endblock %}
 
 {% block content %}
-
-<div class="row justify-content-center">
-    <div class="col-md-8">
+<div class="d-flex justify-content-center align-items-center mb-5 mt-4">
+    <div class="col-md-6">
         
-        <div class="card shadow">
-            <div class="card-body">
-
-                <h2 class="mb-4">
-                    Create New Club
+        <div class="card shadow-lg border-0" style="border-radius: 15px; background-color: #ffffff;">
+            <div class="card-body p-4 p-sm-5">
+                
+                <h2 class="text-center mb-4 fw-bold text-dark">
+                    {{ text['admin_header'] }}
                 </h2>
 
                 <form method="POST">
 
                     <div class="mb-3">
-                        <label class="form-label">Club Name</label>
-                        <input type="text" name="club_name" class="form-control" required>
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_club_name'] }}</label>
+                        <input type="text" name="club_name" class="form-control text-dark border" style="border-radius: 8px;" required>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="3"></textarea>
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_description'] }}</label>
+                        <textarea name="description" class="form-control text-dark border" rows="3" style="border-radius: 8px;"></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Teacher</label>
-                        <input type="text" name="teacher" class="form-control">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_teacher'] }}</label>
+                        <input type="text" name="teacher" class="form-control text-dark border" style="border-radius: 8px;">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Schedule</label>
-                        <input type="text" name="schedule" class="form-control">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_schedule'] }}</label>
+                        <input type="text" name="schedule" class="form-control text-dark border" style="border-radius: 8px;">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Max Members</label>
-                        <input type="number" name="max_members" class="form-control">
+                    <div class="mb-4">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_max_members'] }}</label>
+                        <input type="number" name="max_members" class="form-control text-dark border" style="border-radius: 8px;" required>
                     </div>
 
-                    <button type="submit" class="btn btn-success">
-                        Create Club
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm" style="border-radius: 8px;">
+                        {{ text['btn_create_club'] }}
                     </button>
 
                 </form>
@@ -54,5 +53,4 @@ Admin Panel
 
     </div>
 </div>
-
 {% endblock %}
