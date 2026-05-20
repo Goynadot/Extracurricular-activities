@@ -1,59 +1,58 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Clubs
+{{ text['clubs'] }} — {{ text['brand'] }}
 {% endblock %}
 
 {% block content %}
 
-<h1 class="mb-4">
-    Student Clubs
+<h1 class="mb-4 text-white fw-bold mt-2">
+    {{ text['clubs_title'] }}
 </h1>
 
 <div class="row">
 
 {% for club in clubs %}
-
 <div class="col-md-6 mb-4">
 
-    <div class="card shadow h-100">
-        <div class="card-body">
+    <div class="card shadow-sm h-100 club-hover-card item-{{ loop.index }}">
+        <div class="card-body p-4">
 
-            <h3 class="card-title">
+            <h3 class="card-title fw-bold text-dark">
                 {{ club.club_name }}
             </h3>
 
-            <p class="card-text">
+            <p class="card-text text-muted mt-2">
                 {{ club.description }}
             </p>
 
-            <hr>
+            <hr class="opacity-25 my-3">
 
-            <p>
-                <strong>Teacher:</strong>
+            <p class="mb-2 text-dark">
+                <strong>{{ text['club_teacher'] }}:</strong>
                 {{ club.teacher }}
             </p>
 
-            <p>
-                <strong>Schedule:</strong>
+            <p class="mb-2 text-dark">
+                <strong>{{ text['club_schedule'] }}:</strong>
                 {{ club.schedule }}
             </p>
 
-            <p>
-                <strong>Available places:</strong>
-                {{ club.max_members }}
+            <p class="mb-4 text-dark">
+                <strong>{{ text['club_places'] }}:</strong>
+                <span class="badge bg-secondary px-2 py-1 fs-6">{{ club.max_members }}</span>
             </p>
 
             {% if current_user.is_authenticated %}
                 
-                <a href="/register_club/{{ club.id }}" class="btn btn-primary">
-                    Join Club
+                <a href="/register_club/{{ club.id }}" class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px;">
+                    {{ text['btn_join'] }}
                 </a>
 
             {% else %}
                 
-                <a href="/login" class="btn btn-dark">
-                    Login to Join
+                <a href="/login" class="btn btn-dark btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px; background-color: #212529;">
+                    {{ text['btn_login_to_join'] }}
                 </a>
 
             {% endif %}
@@ -62,7 +61,6 @@ Clubs
     </div>
 
 </div>
-
 {% endfor %}
 
 </div>
