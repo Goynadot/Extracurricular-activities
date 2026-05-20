@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 from config import Config
 
 app = Flask(__name__, template_folder='static/templates', static_folder='static', static_url_path='/static')
@@ -302,10 +303,12 @@ def register_club(club_id):
     if existing_registration:
         return "You are already registered."
 
+    current_date = datetime.now().strftime('%d.%m.%Y %H:%M')
+
     registration = Registration(
         student_id=current_user.id,
         club_id=club.id,
-        registration_date='2026',
+        registration_date=current_date,
         status='Pending'
     )
 
