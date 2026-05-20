@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ text['admin_edit_header'] }} — {{ text['brand'] }}
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center mb-5 mt-4">
+    <div class="col-md-6">
+        
+        <div class="card shadow-lg border-0" style="border-radius: 15px; background-color: #ffffff;">
+            <div class="card-body p-4 p-sm-5">
+                
+                <h2 class="text-center mb-4 fw-bold text-dark">
+                    {{ text['admin_edit_header'] }}
+                </h2>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_club_name'] }}</label>
+                        <input type="text" name="club_name" class="form-control text-dark border" style="border-radius: 8px;" value="{{ club.club_name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_description'] }}</label>
+                        <textarea name="description" class="form-control text-dark border" rows="4" style="border-radius: 8px;">{{ club.description }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_teacher'] }}</label>
+                        <input type="text" name="teacher" class="form-control text-dark border" style="border-radius: 8px;" value="{{ club.teacher }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_schedule'] }}</label>
+                        <input type="text" name="schedule" class="form-control text-dark border" style="border-radius: 8px;" value="{{ club.schedule }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-secondary fw-semibold">{{ text['label_max_members'] }}</label>
+                        <input type="number" name="max_members" class="form-control text-dark border" style="border-radius: 8px;" value="{{ club.max_members }}" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/admin" class="btn btn-secondary btn-lg fw-bold w-100 me-2 shadow-sm" style="border-radius: 8px;">
+                            Назад
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 ms-2 fw-bold shadow-sm" style="border-radius: 8px;">
+                            {{ text['btn_save_changes'] }}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
