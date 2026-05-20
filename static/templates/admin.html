@@ -68,9 +68,19 @@
                         {% endif %}
                     </small>
                 </div>
-                <a href="/admin/edit/{{ club.id }}" class="btn btn-outline-primary fw-bold" style="border-radius: 6px;">
-                    {{ text.get('btn_edit', 'Редагувати') }}
-                </a>
+                
+                <div class="d-flex gap-2">
+                    <a href="/admin/edit/{{ club.id }}" class="btn btn-outline-primary fw-bold px-3" style="border-radius: 6px;">
+                        {{ text.get('btn_edit', 'Редагувати') }}
+                    </a>
+                    
+                    <form action="/admin/delete/{{ club.id }}" method="POST" class="m-0" onsubmit="return confirm('{{ text.get('confirm_delete', 'Ви впевнені, що хочете видалити цей гурток?') }}');">
+                        <button type="submit" class="btn btn-outline-danger fw-bold px-3" style="border-radius: 6px;">
+                            {{ text.get('btn_delete', 'Видалити') }}
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </div>
         {% endfor %}
