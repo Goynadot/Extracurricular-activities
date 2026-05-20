@@ -269,6 +269,11 @@ def edit_club(club_id):
         club.teacher = request.form['teacher']
         club.schedule = request.form['schedule']
         club.max_members = int(request.form['max_members'])
+
+        club.translation.club_name_en = request.form.get('club_name_en', '')
+        club.translation.description_en = request.form.get('description_en', '')
+        club.translation.teacher_en = request.form.get('teacher_en', '')
+        club.translation.schedule_en = request.form.get('schedule_en', '')
         
         db.session.commit()
         return redirect(url_for('admin'))
