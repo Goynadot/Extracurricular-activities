@@ -235,26 +235,39 @@ def admin():
         return redirect(url_for('home'))
 
     if request.method == 'POST':
-        club_name = request.form['club_name']
-        description = request.form['description']
-        teacher = request.form['teacher']
-        schedule = request.form['schedule']
-        max_members = int(request.form['max_members'])
-
         new_club = Club(
-            club_name=club_name,
-            description=description,
-            teacher=teacher,
-            schedule=schedule,
-            max_members=max_members
+            club_name=request.form['club_name'],
+            description=request.form['description'],
+            teacher=request.form['teacher'],
+            schedule=request.form['schedule'],
+            max_members=int(request.form['max_members'])
         )
-
         db.session.add(new_club)
         db.session.commit()
+        return redirect(url_for('admin'))
 
-        return redirect(url_for('clubs'))
+    all_clubs = Club.query.all()
+    return render_template('admin.html', clubs=all_clubs)
 
-    return render_template('admin.html')
+@app.route('/admin/edit/<int:club_id>', methods=['GET', 'POST'])
+@login_required
+def edit_club(club_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+
+    club = Club.query.get_or_404(club_id)
+
+    if request.method == 'POST':
+        club.club_name = request.form['club_name']
+        club.description = request.form['description']
+        club.teacher = request.form['teacher']
+        club.schedule = request.form['schedule']
+        club.max_members = int(request.form['max_members'])
+        
+        db.session.commit()
+        return redirect(url_for('admin'))
+
+    return render_template('edit_club.html', club=club)
 
 @app.route('/register_club/<int:club_id>')
 @login_required
