@@ -38,7 +38,11 @@
                             
                             <div>
                                 <span class="badge bg-warning text-dark fs-6 rounded-pill px-4 py-2 shadow-sm border border-warning">
-                                    {{ registration.status }}
+                                    {% if registration.status == 'Pending' %}
+                                        {{ text.get('status_pending', 'В очікуванні') }}
+                                    {% else %}
+                                        {{ registration.status }}
+                                    {% endif %}
                                 </span>
                             </div>
 
