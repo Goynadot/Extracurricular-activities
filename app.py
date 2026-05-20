@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import Config
 
 app = Flask(__name__, template_folder='static/templates', static_folder='static', static_url_path='/static')
@@ -68,7 +68,8 @@ TRANSLATIONS = {
         'btn_save_changes': 'Зберегти зміни',
         'btn_back': 'Назад',
         'btn_delete': 'Видалити',
-        'confirm_delete': 'Ви впевнені, що хочете видалити цей гурток? Усі записи студентів до нього також будуть видалені.'
+        'confirm_delete': 'Ви впевнені, що хочете видалити цей гурток? Усі записи студентів до нього також будуть видалені.',
+        'status_pending': 'В очікуванні'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -121,7 +122,8 @@ TRANSLATIONS = {
         'btn_save_changes': 'Save Changes',
         'btn_back': 'Back',
         'btn_delete': 'Delete',
-        'confirm_delete': 'Are you sure you want to delete this club? All student registrations for it will also be deleted.'
+        'confirm_delete': 'Are you sure you want to delete this club? All student registrations for it will also be deleted.',
+        'status_pending': 'Pending'
     }
 }
 
@@ -303,7 +305,8 @@ def register_club(club_id):
     if existing_registration:
         return "You are already registered."
 
-    current_date = datetime.now().strftime('%d.%m.%Y %H:%M')
+    current_time_ua = datetime.utcnow() + timedelta(hours=3)
+    current_date = current_time_ua.strftime('%d.%m.%Y %H:%M')
 
     registration = Registration(
         student_id=current_user.id,
