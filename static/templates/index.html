@@ -24,8 +24,22 @@
     </div>
 </section>
 
-<div class="text-center mt-5">
-    <p class="text-muted">{{ text['welcome_msg'] }}</p>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8">
+            
+            <div class="card shadow-lg" style="border: 3px solid #ffc107; border-radius: 15px; background-color: #ffffff;">
+                <div class="card-body p-4 text-center">
+                    
+                    <p class="fs-4 fw-bold text-dark mb-0" style="line-height: 1.6;">
+                        {{ text['welcome_msg'] }}
+                    </p>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
 </div>
 
 {% endblock %}
