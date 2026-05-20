@@ -1,39 +1,43 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ text['my_clubs'] }} — {{ text['brand'] }}
+{{ text.get('my_clubs', 'My Clubs') }} — {{ text.get('brand', 'System') }}
 {% endblock %}
 
 {% block content %}
 <div class="container mt-4 mb-5">
     
-    <h2 class="text-center mb-4 fw-bold text-white">
-        {{ text['dash_my_clubs_title'] }}
-    </h2>
+    <div class="d-flex align-items-center mt-2 mb-5 px-2">
+        <div class="flex-grow-1 border-bottom border-white opacity-25"></div>
+        <h2 class="mx-4 mb-0 text-white fw-bold text-uppercase text-center" style="letter-spacing: 1px; text-shadow: 0px 2px 5px rgba(0,0,0,0.3); font-size: 1.6rem;">
+            {{ text.get('dash_my_clubs_title', 'Мої гуртки') }}
+        </h2>
+        <div class="flex-grow-1 border-bottom border-white opacity-25"></div>
+    </div>
 
     <div class="row justify-content-center">
         
         {% if registrations %}
             {% for registration in registrations %}
-                <div class="col-md-8 mb-3">
-                    <div class="card shadow-sm border-0" style="border-radius: 12px; background-color: #ffffff;">
-                        <div class="card-body d-flex justify-content-between align-items-center p-4">
+                <div class="col-md-8 mb-4">
+                    <div class="card shadow-lg border-0 club-hover-card" style="border-radius: 15px; background-color: #ffffff;">
+                        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center p-4">
                             
-                            <div>
-                                <h4 class="fw-bold mb-1 text-dark">
-                                    {% if lang == 'en' and registration.club.club_name_en %}
-                                        {{ registration.club.club_name_en }}
+                            <div class="text-center text-md-start mb-3 mb-md-0">
+                                <h4 class="fw-bold mb-2 text-dark">
+                                    {% if lang == 'en' and registration.club.translation and registration.club.translation.club_name_en %}
+                                        {{ registration.club.translation.club_name_en }}
                                     {% else %}
                                         {{ registration.club.club_name }}
                                     {% endif %}
                                 </h4>
-                                <small class="text-muted">
+                                <span class="text-muted" style="font-size: 0.95rem;">
                                     ID: {{ registration.id }} | 📅 {{ registration.registration_date }}
-                                </small>
+                                </span>
                             </div>
                             
                             <div>
-                                <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-2 shadow-sm">
+                                <span class="badge bg-warning text-dark fs-6 rounded-pill px-4 py-2 shadow-sm border border-warning">
                                     {{ registration.status }}
                                 </span>
                             </div>
@@ -44,13 +48,22 @@
             {% endfor %}
             
         {% else %}
-            <div class="col-md-8 text-center mt-3">
-                <div class="card shadow-sm border-0" style="border-radius: 15px; background-color: rgba(255, 255, 255, 0.95);">
+            <div class="col-md-7 text-center mt-2">
+                <div class="card shadow-lg border-0" style="border-radius: 20px; background-color: #ffffff;">
                     <div class="card-body p-5">
-                        <h4 class="text-muted fw-bold mb-3">{{ text['dash_no_clubs'] }}</h4>
-                        <a href="/clubs" class="btn btn-primary btn-lg shadow-sm" style="border-radius: 8px;">
-                            {{ text['btn_explore'] }}
+                        
+                        <div class="mb-4">
+                            <span style="font-size: 4.5rem; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));">🔭</span>
+                        </div>
+                        
+                        <h3 class="fw-bold text-dark mb-4 px-3" style="line-height: 1.4;">
+                            {{ text.get('dash_no_clubs', 'Ви ще не записані до жодного гуртка.') }}
+                        </h3>
+                        
+                        <a href="/clubs" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow-sm" style="border-radius: 12px; font-size: 1.15rem; transition: transform 0.2s;">
+                            {{ text.get('btn_explore', 'Оглянути гуртки') }}
                         </a>
+                        
                     </div>
                 </div>
             </div>
