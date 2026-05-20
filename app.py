@@ -60,7 +60,11 @@ TRANSLATIONS = {
         'label_teacher': 'Викладач / Тренер',
         'label_schedule': 'Розклад',
         'label_max_members': 'Макс. кількість місць',
-        'btn_create_club': 'Створити гурток'
+        'btn_create_club': 'Створити гурток',
+        'admin_existing_clubs': 'Існуючі гуртки',
+        'btn_edit': 'Редагувати',
+        'admin_edit_header': 'Редагування гуртка',
+        'btn_save_changes': 'Зберегти зміни'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -106,7 +110,11 @@ TRANSLATIONS = {
         'label_teacher': 'Teacher / Coach',
         'label_schedule': 'Schedule',
         'label_max_members': 'Max Members',
-        'btn_create_club': 'Create Club'
+        'btn_create_club': 'Create Club',
+        'admin_existing_clubs': 'Existing Clubs',
+        'btn_edit': 'Edit',
+        'admin_edit_header': 'Edit Club',
+        'btn_save_changes': 'Save Changes'
     }
 }
 
