@@ -185,3 +185,15 @@ footer {
     width: 100%;
     flex-shrink: 0;
 }
+
+.club-hover-card {
+    border-left: 6px solid #e0e0e0 !important;
+    transition: all 0.3s ease-wrap, transform 0.3s ease, border-left-color 0.3s ease !important;
+    border-radius: 15px !important;
+    background-color: #ffffff !important;
+}
+
+.club-hover-card:hover {
+    transform: translateX(5px) translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
