@@ -6,6 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 
@@ -24,36 +25,52 @@
         
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-center">
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="/">{{ text['home'] }}</a>
+                    <a class="nav-link {% if request.endpoint == 'home' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/">
+                        {{ text['home'] }}
+                    </a>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="/clubs">{{ text['clubs'] }}</a>
+                    <a class="nav-link {% if request.endpoint == 'clubs' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/clubs">
+                        {{ text['clubs'] }}
+                    </a>
                 </li>
                 
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/my_clubs">{{ text['my_clubs'] }}</a>
+                        <a class="nav-link {% if request.endpoint == 'my_clubs' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/my_clubs">
+                            {{ text['my_clubs'] }}
+                        </a>
                     </li>
                     
                     {% if current_user.role == 'admin' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin">{{ text['admin_panel'] }}</a>
+                            <a class="nav-link {% if request.endpoint in ['admin', 'edit_club'] %}text-warning fw-bold{% else %}text-white{% endif %}" href="/admin">
+                                {{ text['admin_panel'] }}
+                            </a>
                         </li>
                     {% endif %}
                     
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">{{ text['dashboard'] }}</a>
+                        <a class="nav-link {% if request.endpoint == 'dashboard' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/dashboard">
+                            {{ text['dashboard'] }}
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-warning" href="/logout">{{ text['logout'] }}</a>
+                        <a class="nav-link text-white opacity-75" href="/logout">{{ text['logout'] }}</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">{{ text['login'] }}</a>
+                        <a class="nav-link {% if request.endpoint == 'login' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/login">
+                            {{ text['login'] }}
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register">{{ text['register'] }}</a>
+                        <a class="nav-link {% if request.endpoint == 'register' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/register">
+                            {{ text['register'] }}
+                        </a>
                     </li>
                 {% endif %}
 
@@ -75,9 +92,10 @@
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-info alert-dismissible fade show">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <div class="alert alert-success border-0 shadow-sm alert-dismissible fade show d-flex align-items-center" role="alert" style="border-radius: 10px;">
+                    <i class="fa-solid fa-circle-check fs-4 me-3"></i>
+                    <div>{{ message }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}
