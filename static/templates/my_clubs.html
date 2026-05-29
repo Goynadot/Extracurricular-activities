@@ -10,74 +10,155 @@
     <div class="d-flex align-items-center mt-2 mb-5 px-2">
         <div class="flex-grow-1 border-bottom border-white opacity-25"></div>
         <h2 class="mx-4 mb-0 text-white fw-bold text-uppercase text-center" style="letter-spacing: 1px; text-shadow: 0px 2px 5px rgba(0,0,0,0.3); font-size: 1.6rem;">
-            {{ text.get('dash_my_clubs_title', 'Мої гуртки') }}
+            {% if current_user.role == 'admin' %}
+                {{ text.get('dash_admin_registrations_title', 'Панель модерації заявок') }}
+            {% else %}
+                {{ text.get('dash_my_clubs_title', 'Мої гуртки') }}
+            {% endif %}
         </h2>
         <div class="flex-grow-1 border-bottom border-white opacity-25"></div>
     </div>
 
     <div class="row justify-content-center">
         
-        {% if registrations %}
-            {% for registration in registrations %}
-                <div class="col-md-8 mb-4">
-                    {% set border_color = loop.cycle('border-primary', 'border-success', 'border-info', 'border-danger', 'border-warning') %}
-                    <div class="card shadow-lg border-0 border-start border-5 {{ border_color }} club-hover-card item-{{ loop.index }}" style="border-radius: 15px; background-color: #ffffff;">
-                        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center p-4">
-                            
-                            <div class="text-center text-md-start mb-3 mb-md-0">
-                                <h4 class="fw-bold mb-2 text-dark">
-                                    {% if lang == 'en' and registration.club.translation and registration.club.translation.club_name_en %}
-                                        {{ registration.club.translation.club_name_en }}
-                                    {% else %}
-                                        {{ registration.club.club_name }}
-                                    {% endif %}
-                                </h4>
-                                <span class="text-muted" style="font-size: 0.95rem;">
-                                    ID: {{ registration.id }} | 📅 {{ registration.registration_date }}
-                                </span>
-                            </div>
-                            
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="badge bg-warning text-dark fs-6 rounded-pill px-4 py-2 shadow-sm border border-warning">
-                                    {% if registration.status == 'Pending' %}
-                                        {{ text.get('status_pending', 'В очікуванні') }}
-                                    {% else %}
-                                        {{ registration.status }}
-                                    {% endif %}
-                                </span>
-                                
-                                <form action="/cancel_registration/{{ registration.id }}" method="POST" class="m-0" onsubmit="return confirm('{{ text.get('confirm_cancel', 'Ви впевнені, що хочете скасувати заявку?') }}');">
-                                    <button type="submit" class="btn btn-outline-danger rounded-pill px-3 py-2 shadow-sm d-flex align-items-center gap-2" style="transition: all 0.2s;">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </button>
-                                </form>
-                            </div>
+        {% if current_user.role == 'admin' %}
+            {% if registrations %}
+                <div class="col-md-11">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 bg-white">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="ps-4 py-3">{{ text.get('th_student', 'Студент') }}</th>
+                                        <th class="py-3">{{ text.get('th_group', 'Група') }}</th>
+                                        <th class="py-3">{{ text.get('th_club', 'Гурток') }}</th>
+                                        <th class="py-3">{{ text.get('th_date', 'Дата заявки') }}</th>
+                                        <th class="text-center py-3">{{ text.get('th_status', 'Статус') }}</th>
+                                        <th class="text-center py-3 pe-4">{{ text.get('th_actions', 'Дії модератора') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for registration in registrations %}
+                                    <tr>
+                                        <td class="ps-4fw-bold text-dark">{{ registration.student.full_name }}</td>
+                                        <td><span class="badge bg-secondary rounded-pill px-3">{{ registration.student.group_name }}</span></td>
+                                        <td class="fw-bold">
+                                            {% if lang == 'en' and registration.club.translation and registration.club.translation.club_name_en %}
+                                                {{ registration.club.translation.club_name_en }}
+                                            {% else %}
+                                                {{ registration.club.club_name }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted" style="font-size: 0.9rem;">📅 {{ registration.registration_date }}</td>
+                                        <td class="text-center">
+                                            {% if registration.status == 'Pending' %}
+                                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">{{ text.get('status_pending', 'В очікуванні') }}</span>
+                                            {% elif registration.status == 'Approved' %}
+                                                <span class="badge bg-success text-white px-3 py-2 rounded-pill">{{ text.get('status_approved', 'Прийнято') }}</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-dark px-3 py-2 rounded-pill">{{ registration.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center pe-4">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                {% if registration.status == 'Pending' %}
+                                                    <form action="/admin/approve_registration/{{ registration.id }}" method="POST" class="m-0">
+                                                        <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm d-flex align-items-center gap-1">
+                                                            <i class="fa-solid fa-check"></i> {{ text.get('btn_approve', 'Прийняти') }}
+                                                        </button>
+                                                    </form>
+                                                    <form action="/admin/reject_registration/{{ registration.id }}" method="POST" class="m-0" onsubmit="return confirm('Відхилити цю заявку?');">
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold shadow-sm d-flex align-items-center gap-1">
+                                                            <i class="fa-solid fa-ban"></i> {{ text.get('btn_reject', 'Відхилити') }}
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <form action="/admin/reject_registration/{{ registration.id }}" method="POST" class="m-0" onsubmit="return confirm('Викреслити студента з гуртка? Вільне місце повернеться.');">
+                                                        <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm d-flex align-items-center gap-1">
+                                                            <i class="fa-solid fa-user-minus"></i> {{ text.get('btn_remove', 'Викреслити') }}
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-md-7 text-center mt-4">
+                    <div class="card shadow-lg border-0 bg-white" style="border-radius: 20px;">
+                        <div class="card-body p-5">
+                            <span class="fs-1">📥</span>
+                            <h3 class="fw-bold text-dark mt-3">{{ text.get('dash_no_admin_regs', 'Наразі немає активних заявок.') }}</h3>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            
         {% else %}
-            <div class="col-md-7 text-center mt-2">
-                <div class="card shadow-lg border-0" style="border-radius: 20px; background-color: #ffffff;">
-                    <div class="card-body p-5">
-                        
-                        <div class="mb-4">
-                            <span style="font-size: 4.5rem; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));">🔭</span>
+            {% if registrations %}
+                {% for registration in registrations %}
+                    <div class="col-md-8 mb-4">
+                        {% set border_color = loop.cycle('border-primary', 'border-success', 'border-info', 'border-danger', 'border-warning') %}
+                        <div class="card shadow-lg border-0 border-start border-5 {{ border_color }} club-hover-card item-{{ loop.index }}" style="border-radius: 15px; background-color: #ffffff;">
+                            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center p-4">
+                                
+                                <div class="text-center text-md-start mb-3 mb-md-0">
+                                    <h4 class="fw-bold mb-2 text-dark">
+                                        {% if lang == 'en' and registration.club.translation and registration.club.translation.club_name_en %}
+                                            {{ registration.club.translation.club_name_en }}
+                                        {% else %}
+                                            {{ registration.club.club_name }}
+                                        {% endif %}
+                                    </h4>
+                                    <span class="text-muted" style="font-size: 0.95rem;">
+                                        ID: {{ registration.id }} | 📅 {{ registration.registration_date }}
+                                    </span>
+                                </div>
+                                
+                                <div class="d-flex align-items-center gap-3">
+                                    {% if registration.status == 'Pending' %}
+                                        <span class="badge bg-warning text-dark fs-6 rounded-pill px-4 py-2 shadow-sm border border-warning">
+                                            {{ text.get('status_pending', 'В очікуванні') }}
+                                        </span>
+                                        <form action="/cancel_registration/{{ registration.id }}" method="POST" class="m-0" onsubmit="return confirm('{{ text.get('confirm_cancel', 'Ви впевнені, що хочете скасувати заявку?') }}');">
+                                            <button type="submit" class="btn btn-outline-danger rounded-pill px-3 py-2 shadow-sm d-flex align-items-center" title="Скасувати">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </form>
+                                    {% elif registration.status == 'Approved' %}
+                                        <span class="badge bg-success text-white fs-6 rounded-pill px-4 py-2 shadow-sm border border-success">
+                                            {{ text.get('status_approved', 'Прийнято') }}
+                                        </span>
+                                        {% endif %}
+                                </div>
+
+                            </div>
                         </div>
-                        
-                        <h3 class="fw-bold text-dark mb-4 px-3" style="line-height: 1.4;">
-                            {{ text.get('dash_no_clubs', 'Ви ще не записані до жодного гуртка.') }}
-                        </h3>
-                        
-                        <a href="/clubs" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow-sm" style="border-radius: 12px; font-size: 1.15rem; transition: transform 0.2s;">
-                            {{ text.get('btn_explore', 'Оглянути гуртки') }}
-                        </a>
-                        
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <div class="col-md-7 text-center mt-2">
+                    <div class="card shadow-lg border-0" style="border-radius: 20px; background-color: #ffffff;">
+                        <div class="card-body p-5">
+                            <div class="mb-4">
+                                <span style="font-size: 4.5rem; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.15));">🔭</span>
+                            </div>
+                            <h3 class="fw-bold text-dark mb-4 px-3" style="line-height: 1.4;">
+                                {{ text.get('dash_no_clubs', 'Ви ще не записані до жодного гуртка.') }}
+                            </h3>
+                            <a href="/clubs" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow-sm" style="border-radius: 12px; font-size: 1.15rem; transition: transform 0.2s;">
+                                {{ text.get('btn_explore', 'Оглянути гуртки') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% endif %}
 
     </div>
