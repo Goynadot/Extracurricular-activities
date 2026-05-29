@@ -56,17 +56,25 @@
 
             <p class="mb-4 text-dark">
                 <strong>{{ text['club_places'] }}:</strong>
-                <span class="badge bg-secondary px-2 py-1 fs-6">{{ club.max_members }}</span>
+                <span class="badge {% if club.available_places > 0 %}bg-secondary{% else %}bg-danger{% endif %} px-2 py-1 fs-6">
+                    {{ club.available_places }}
+                </span>
             </p>
 
-            {% if current_user.is_authenticated %}
-                <a href="/register_club/{{ club.id }}" class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px;">
-                    {{ text['btn_join'] }}
-                </a>
+            {% if club.available_places > 0 %}
+                {% if current_user.is_authenticated %}
+                    <a href="/register_club/{{ club.id }}" class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px;">
+                        {{ text['btn_join'] }}
+                    </a>
+                {% else %}
+                    <a href="/login" class="btn btn-dark btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px; background-color: #212529;">
+                        {{ text['btn_login_to_join'] }}
+                    </a>
+                {% endif %}
             {% else %}
-                <a href="/login" class="btn btn-dark btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px; background-color: #212529;">
-                    {{ text['btn_login_to_join'] }}
-                </a>
+                <button class="btn btn-secondary btn-lg fw-bold px-4 shadow-sm" style="border-radius: 8px; opacity: 0.8;" disabled>
+                    {% if lang == 'en' %}No available places{% else %}Немає вільних місць{% endif %}
+                </button>
             {% endif %}
 
         </div>
