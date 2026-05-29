@@ -75,6 +75,7 @@ footer {
     transition: all 0.3s ease;
 }
 
+/* --- АНІМАЦІЯ КАРТОК --- */
 .item-1:hover { border-left-color: #ff4757 !important; color: #ff4757; transform: translateX(5px); }
 .item-2:hover { border-left-color: #2ed573 !important; color: #2ed573; transform: translateX(5px); }
 .item-3:hover { border-left-color: #1e90ff !important; color: #1e90ff; transform: translateX(5px); }
@@ -85,3 +86,28 @@ footer {
 .item-8:hover { border-left-color: #eb4d4b !important; color: #eb4d4b; transform: translateX(5px); }
 .item-9:hover { border-left-color: #6c5ce7 !important; color: #6c5ce7; transform: translateX(5px); }
 .item-10:hover { border-left-color: #f0932b !important; color: #f0932b; transform: translateX(5px); }
+
+/* --- НОВІ СТИЛІ ДЛЯ МЕНЮ (СВІТІННЯ) --- */
+.navbar-nav .nav-link {
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0px 1px 3px rgba(0,0,0,0.8); /* Темна тінь для контрасту вдень */
+}
+
+/* Світіння для білих кнопок при наведенні */
+.navbar-nav .nav-link:not(.text-warning):hover {
+    color: #ffffff !important;
+    text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8), 
+                 0px 0px 15px rgba(255, 255, 255, 0.5) !important;
+    transform: scale(1.05); /* Ледь помітне збільшення */
+}
+
+/* Окреме світіння для активної жовтої вкладки */
+.navbar-nav .nav-link.text-warning {
+    text-shadow: 0px 0px 8px rgba(255, 193, 7, 0.5) !important;
+}
+
+.navbar-nav .nav-link.text-warning:hover {
+    text-shadow: 0px 0px 12px rgba(255, 193, 7, 1),
+                 0px 0px 20px rgba(255, 193, 7, 0.7) !important;
+    transform: scale(1.05);
+}
