@@ -41,7 +41,11 @@
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'my_clubs' %}text-warning fw-bold{% else %}text-white{% endif %}" href="/my_clubs">
-                            {{ text['my_clubs'] }}
+                            {% if current_user.role == 'admin' %}
+                                {{ text.get('dash_admin_registrations_title', 'Модерація') }}
+                            {% else %}
+                                {{ text['my_clubs'] }}
+                            {% endif %}
                         </a>
                     </li>
                     
