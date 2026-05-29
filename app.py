@@ -43,6 +43,7 @@ TRANSLATIONS = {
         'flash_reg_success': 'Реєстрація успішно завершена!',
         'flash_login_success': 'Вхід виконано успішно!',
         'flash_login_error': 'Невірний email або пароль.',
+        'flash_cancel_success': 'Заявку успішно скасовано!',
         'dash_welcome': 'Вітаємо',
         'dash_group': 'Група',
         'dash_speciality': 'Спеціальність',
@@ -97,6 +98,7 @@ TRANSLATIONS = {
         'flash_reg_success': 'Registration completed successfully!',
         'flash_login_success': 'Successfully logged in!',
         'flash_login_error': 'Invalid email or password.',
+        'flash_cancel_success': 'Registration successfully cancelled!',
         'dash_welcome': 'Welcome',
         'dash_group': 'Group',
         'dash_speciality': 'Speciality',
@@ -319,6 +321,24 @@ def register_club(club_id):
     db.session.commit()
 
     return redirect('/my_clubs')
+
+# --- НОВИЙ МАРШРУТ ДЛЯ СКАСУВАННЯ ЗАЯВКИ ---
+@app.route('/cancel_registration/<int:registration_id>', methods=['POST'])
+@login_required
+def cancel_registration(registration_id):
+    # Знаходимо заявку
+    registration = Registration.query.get_or_404(registration_id)
+    
+    # Перевіряємо, чи ця заявка дійсно належить поточному студенту (безпека!)
+    if registration.student_id == current_user.id:
+        db.session.delete(registration)
+        db.session.commit()
+        
+        # Додаємо флеш-повідомлення про успішне скасування
+        current_lang = session.get('lang', 'uk')
+        flash(TRANSLATIONS[current_lang].get('flash_cancel_success', 'Заявку скасовано'))
+        
+    return redirect(url_for('my_clubs'))
 
 @app.route('/admin/delete/<int:club_id>', methods=['POST'])
 @login_required
