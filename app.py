@@ -22,7 +22,7 @@ TRANSLATIONS = {
         'home': 'Головна',
         'clubs': 'Гуртки',
         'my_clubs': 'Мої Гуртки',
-        'admin_panel': 'Панель Адміна',
+        'admin_panel': 'Панель Adminа',
         'dashboard': 'Кабінет',
         'logout': 'Вихід',
         'login': 'Вхід',
@@ -44,12 +44,16 @@ TRANSLATIONS = {
         'flash_login_success': 'Вхід виконано успішно!',
         'flash_login_error': 'Невірний email або пароль.',
         'flash_cancel_success': 'Заявку успішно скасовано!',
+        'flash_approve_success': 'Заявку успішно схвалено!',
+        'flash_reject_success': 'Заявку відхилено та вилучено з системи!',
         'dash_welcome': 'Вітаємо',
         'dash_group': 'Група',
         'dash_speciality': 'Спеціальність',
         'dash_role': 'Роль',
         'dash_my_clubs_title': 'Мої активні гуртки та секції',
+        'dash_admin_registrations_title': 'Панель модерації заявок студентів',
         'dash_no_clubs': 'Ви ще не записані до жодного гуртка.',
+        'dash_no_admin_regs': 'Наразі немає жодної активної заявки від студентів.',
         'clubs_title': 'Студентські гуртки та секції',
         'club_teacher': 'Викладач / Тренер',
         'club_schedule': 'Розклад занять',
@@ -70,7 +74,17 @@ TRANSLATIONS = {
         'btn_back': 'Назад',
         'btn_delete': 'Видалити',
         'confirm_delete': 'Ви впевнені, що хочете видалити цей гурток? Усі записи студентів до нього також будуть видалені.',
-        'status_pending': 'В очікуванні'
+        'status_pending': 'В очікуванні',
+        'status_approved': 'Прийнято',
+        'btn_approve': 'Прийняти',
+        'btn_reject': 'Відхилити',
+        'btn_remove': 'Викреслити',
+        'th_student': 'Студент',
+        'th_group': 'Група',
+        'th_club': 'Гурток',
+        'th_date': 'Дата заявки',
+        'th_status': 'Статус',
+        'th_actions': 'Дії модератора'
     },
     'en': {
         'brand': 'Student Activities System',
@@ -99,12 +113,16 @@ TRANSLATIONS = {
         'flash_login_success': 'Successfully logged in!',
         'flash_login_error': 'Invalid email or password.',
         'flash_cancel_success': 'Registration successfully cancelled!',
+        'flash_approve_success': 'Application successfully approved!',
+        'flash_reject_success': 'Application removed and rejected!',
         'dash_welcome': 'Welcome',
         'dash_group': 'Group',
         'dash_speciality': 'Speciality',
         'dash_role': 'Role',
         'dash_my_clubs_title': 'My Active Clubs & Sections',
+        'dash_admin_registrations_title': 'Student Applications Moderation Panel',
         'dash_no_clubs': 'You are not registered in any clubs yet.',
+        'dash_no_admin_regs': 'There are currently no active applications from students.',
         'clubs_title': 'Student Clubs & Sections',
         'club_teacher': 'Teacher / Coach',
         'club_schedule': 'Schedule',
@@ -125,7 +143,17 @@ TRANSLATIONS = {
         'btn_back': 'Back',
         'btn_delete': 'Delete',
         'confirm_delete': 'Are you sure you want to delete this club? All student registrations for it will also be deleted.',
-        'status_pending': 'Pending'
+        'status_pending': 'Pending',
+        'status_approved': 'Approved',
+        'btn_approve': 'Approve',
+        'btn_reject': 'Reject',
+        'btn_remove': 'Remove',
+        'th_student': 'Student',
+        'th_group': 'Group',
+        'th_club': 'Club',
+        'th_date': 'Applied Date',
+        'th_status': 'Status',
+        'th_actions': 'Actions'
     }
 }
 
@@ -187,6 +215,10 @@ def home():
 @app.route('/clubs')
 def clubs():
     all_clubs = Club.query.all()
+    # Додаємо динамічний підрахунок вільних місць на основі СХВАЛЕНИХ заявок для відображення в шаблоні
+    for club in all_clubs:
+        approved_count = Registration.query.filter_by(club_id=club.id, status='Approved').count()
+        club.available_places = max(0, club.max_members - approved_count)
     return render_template('clubs.html', clubs=all_clubs)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -294,9 +326,10 @@ def edit_club(club_id):
 def register_club(club_id):
     club = Club.query.get_or_404(club_id)
 
-    registrations_count = Registration.query.filter_by(club_id=club.id).count()
+    # Тепер рахуємо тільки РЕАЛЬНО схвалені місця
+    approved_count = Registration.query.filter_by(club_id=club.id, status='Approved').count()
 
-    if registrations_count >= club.max_members:
+    if approved_count >= club.max_members:
         return "No available places."
 
     existing_registration = Registration.query.filter_by(
@@ -322,22 +355,52 @@ def register_club(club_id):
 
     return redirect('/my_clubs')
 
-# --- НОВИЙ МАРШРУТ ДЛЯ СКАСУВАННЯ ЗАЯВКИ ---
 @app.route('/cancel_registration/<int:registration_id>', methods=['POST'])
 @login_required
 def cancel_registration(registration_id):
-    # Знаходимо заявку
     registration = Registration.query.get_or_404(registration_id)
-    
-    # Перевіряємо, чи ця заявка дійсно належить поточному студенту (безпека!)
     if registration.student_id == current_user.id:
         db.session.delete(registration)
         db.session.commit()
-        
-        # Додаємо флеш-повідомлення про успішне скасування
         current_lang = session.get('lang', 'uk')
         flash(TRANSLATIONS[current_lang].get('flash_cancel_success', 'Заявку скасовано'))
+    return redirect(url_for('my_clubs'))
+
+# --- НОВІ МАРШРУТИ АДМІНІСТРАТОРА ДЛЯ МОДЕРАЦІЇ ---
+
+@app.route('/admin/approve_registration/<int:registration_id>', methods=['POST'])
+@login_required
+def approve_registration(registration_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
         
+    registration = Registration.query.get_or_404(registration_id)
+    
+    # Перед схваленням ще раз перевіряємо ліміт місць у гуртку
+    approved_count = Registration.query.filter_by(club_id=registration.club_id, status='Approved').count()
+    if approved_count >= registration.club.max_members:
+        flash("Немає вільних місць у цьому гуртку!")
+        return redirect(url_for('my_clubs'))
+        
+    registration.status = 'Approved'
+    db.session.commit()
+    
+    current_lang = session.get('lang', 'uk')
+    flash(TRANSLATIONS[current_lang]['flash_approve_success'])
+    return redirect(url_for('my_clubs'))
+
+@app.route('/admin/reject_registration/<int:registration_id>', methods=['POST'])
+@login_required
+def reject_registration(registration_id):
+    if current_user.role != 'admin':
+        return redirect(url_for('home'))
+        
+    registration = Registration.query.get_or_404(registration_id)
+    db.session.delete(registration) # Повністю викреслюємо з бази даних
+    db.session.commit()
+    
+    current_lang = session.get('lang', 'uk')
+    flash(TRANSLATIONS[current_lang]['flash_reject_success'])
     return redirect(url_for('my_clubs'))
 
 @app.route('/admin/delete/<int:club_id>', methods=['POST'])
@@ -347,7 +410,6 @@ def delete_club(club_id):
         return redirect(url_for('home'))
 
     club = Club.query.get_or_404(club_id)
-
     Registration.query.filter_by(club_id=club.id).delete()
 
     if club.translation:
@@ -355,14 +417,19 @@ def delete_club(club_id):
 
     db.session.delete(club)
     db.session.commit()
-
     return redirect(url_for('admin'))
 
 @app.route('/my_clubs')
 @login_required
 def my_clubs():
-    user_registrations = Registration.query.filter_by(student_id=current_user.id).all()
-    return render_template('my_clubs.html', registrations=user_registrations)
+    if current_user.role == 'admin':
+        # Якщо зайшов адмін — дістаємо абсолютно УСІ заявки всіх студентів
+        registrations = Registration.query.all()
+        return render_template('my_clubs.html', registrations=registrations)
+    else:
+        # Якщо звичайний студент — тільки його особисті
+        user_registrations = Registration.query.filter_by(student_id=current_user.id).all()
+        return render_template('my_clubs.html', registrations=user_registrations)
 
 @app.route('/logout')
 @login_required
@@ -373,9 +440,7 @@ def logout():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-
         admin_exists = Student.query.filter_by(email='admin@gmail.com').first()
-
         if not admin_exists:
             admin = Student(
                 full_name='Administrator',
